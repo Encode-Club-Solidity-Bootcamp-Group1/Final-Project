@@ -1,25 +1,47 @@
-import { Controller, Post, Body, Param } from '@nestjs/common';
+import { Controller, Post, Body, Param, HttpException } from '@nestjs/common';
 import { NftService } from './nft.service';
-import { MintNftDto } from './dto/mint-nft.dto';
-import { BurnNftDto } from './dto/burn-nft.dto';
-import { TransferNftDto } from './dto/transfer-nft.dto';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { MintRequestDto } from './dtos/mint-request.dto';
 
 @Controller('nft')
 export class NftController {
   constructor(private readonly nftService: NftService) {}
 
-  @Post()
-  mint(@Body() createNftDto: MintNftDto) {
-    return this.nftService.mint(createNftDto);
+  @Post('mint-nft')
+  @ApiOperation({
+    summary: 'Mint NFT',
+    description:
+      'Requests the server to mint an NFT tokens with the provided data',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'NFT ID',
+    type: Number,
+  })
+  @ApiResponse({
+    status: 503,
+    description: 'Server Error',
+    type: HttpException,
+  })
+  async mintNFT(@Body() mintRequestDto: MintRequestDto) {
+    try {
+      const result = await this.nftService.mint(
+        mintRequestDto.toAddress,
+        mintRequestDto.text,
+      );
+      return result;
+    } catch (error) {
+      throw new HttpException(error.message, 503);
+    }
   }
 
   @Post()
-  transfer(@Body() transferNftDto: TransferNftDto) {
-    return this.nftService.transfer(transferNftDto);
+  transfer() {
+    return this.nftService.transfer();
   }
 
   @Post()
-  burn(@Body() burnNftDto: BurnNftDto) {
-    return this.nftService.burn(burnNftDto);
+  burn() {
+    return this.nftService.burn();
   }
 }
