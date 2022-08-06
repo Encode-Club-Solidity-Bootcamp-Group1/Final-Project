@@ -1,8 +1,7 @@
 {
-  "name": "lesson-7",
+  "name": "KudosNFT",
   "version": "1.0.0",
-  "description": "Lesson 7 for Encode Bootcamp June 2022",
-  "main": "index.js",
+  "description": "Send Kudos to your friends",
   "license": "MIT",
   "private": true,
   "dependencies": {
