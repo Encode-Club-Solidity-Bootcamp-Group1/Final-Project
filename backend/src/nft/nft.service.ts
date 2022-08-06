@@ -17,7 +17,6 @@ export class NftService {
   }
 
   setupContractInstances() {
-    // TODO: Update the contract ABI
     const contractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
     if (!contractAddress || contractAddress.length === 0) return;
     this.contractPublicInstance = new ethers.Contract(
