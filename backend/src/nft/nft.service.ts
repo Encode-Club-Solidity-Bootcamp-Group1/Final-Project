@@ -17,7 +17,7 @@ export class NftService {
   }
 
   setupContractInstances() {
-    const contractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
+    const contractAddress = process.env.NFT_CONTRACT_ADDRESS;
     if (!contractAddress || contractAddress.length === 0) return;
     this.contractPublicInstance = new ethers.Contract(
       contractAddress,
