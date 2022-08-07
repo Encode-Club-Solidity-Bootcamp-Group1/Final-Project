@@ -11,12 +11,12 @@ import process from 'process';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    SharedModule,
-    WalletModule,
-    MongooseModule.forRootAsync({
-      useFactory: () => ({ uri: process.env.MONGO_URI }),
-    }),
-    NftModule,
+    // SharedModule,
+    // WalletModule,
+    // NftModule,
+    // MongooseModule.forRootAsync({
+    //   useFactory: () => ({ uri: process.env.MONGO_URI }),
+    // }),
   ],
   controllers: [AppController],
   providers: [AppService],
