@@ -29,6 +29,14 @@ contract KudosNFT is ERC721URIStorage {
         revert("disabled");
     }
 
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public virtual override {
+        revert("disabled");
+    }
+
     function sendKudos(
         address destinaitonAddress,
         string memory name,
