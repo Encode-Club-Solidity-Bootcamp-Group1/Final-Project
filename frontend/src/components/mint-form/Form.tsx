@@ -12,15 +12,6 @@ type StateData = {
   image: Blob,
 }
 
-const emptyKudoDto: KudoDto = {
-  from: "",// todo create form fields to input these
-  to: "",// todo create form fields to input these
-  name: "",// todo create form fields to input these
-  description: "",// todo create form fields to input these
-  imageUrl: "", // todo need to upload the image, then have the url loaded silently
-  tokenId: "" // not in the original form
-};
-
 const BAD_ADDRESS = 'not-connected';
 export function Form(props: { title: string }): JSX.Element {
 
