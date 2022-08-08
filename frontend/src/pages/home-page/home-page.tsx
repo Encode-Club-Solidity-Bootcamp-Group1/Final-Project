@@ -1,10 +1,8 @@
 import React from 'react';
 import ConnectWallet from '../../components/connect-wallet';
-import { KudosList } from '../../components/kudos-list/KudosList';
 import { Form } from '../../components/mint-form/Form';
 import MainPage from '../main-page';
-import { fakeData } from '../../components/kudos-list/fakeData';
-import { Paper } from '@mui/material';
+import { ListsPanel } from './ListsPanel';
 export default function HomePage() {
   return (
     <MainPage>
@@ -13,7 +11,9 @@ export default function HomePage() {
           <div className="absolute top-[10%] right-[5%]">
             <ConnectWallet />
           </div>
-          <Form title='Mint NFT' />
+          <div className='absolute top-[15%] left-[5%]'>
+            <Form title='Mint NFT' />
+          </div>
           <ListsPanel />
         </div>
       </div>
@@ -21,12 +21,3 @@ export default function HomePage() {
   );
 }
 
-function ListsPanel(props: {}): JSX.Element {
-  return <Paper style={{ height: 800, width: 1000 }}>
-    <KudosList title='Received' data={fakeData} />
-    <br />
-    <br />
-    <KudosList title='Sent' data={fakeData} />
-    <br />
-  </Paper >
-}

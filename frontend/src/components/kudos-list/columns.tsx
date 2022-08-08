@@ -12,7 +12,7 @@ export const COLUMNS: GridColDef[] = [
   },
   {
     field: 'name',
-    headerName: 'name'
+    headerName: 'Name'
   },
   {
     field: 'description',
@@ -24,6 +24,6 @@ export const COLUMNS: GridColDef[] = [
   },
   {
     field: 'tokenId',
-    headerName: 'tokenId'
+    headerName: 'Token ID'
   },
 ];
