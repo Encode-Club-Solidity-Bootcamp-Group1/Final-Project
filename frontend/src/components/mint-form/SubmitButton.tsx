@@ -2,7 +2,7 @@ import React from "react";
 
 
 
-export function SubmitButton(props: { callback?: Function; }): JSX.Element {
+export function SubmitButton(props: { callback?: Function, disabled: boolean }): JSX.Element {
 
   return <button type="submit" className="
       px-6
@@ -21,8 +21,12 @@ export function SubmitButton(props: { callback?: Function; }): JSX.Element {
       transition
       duration-150
       ease-in-out"
-    onClick={e => props.callback}
+    onClick={e => {
+      console.log('submitting', e);
+      props.callback!();
+    }}
+    disabled={props.disabled}
   >
     Mint NFT
-  </button>;
+  </button>
 }

@@ -20,7 +20,7 @@ export default class Endpoints{
   }
 
   static postImage(image: Blob, address:string):any {
-
+    console.debug('image', image.size, 'address:', address);
   }
 
   static saveKudo():any {

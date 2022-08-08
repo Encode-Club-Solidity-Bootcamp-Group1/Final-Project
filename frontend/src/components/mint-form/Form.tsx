@@ -1,8 +1,8 @@
-import React, { useState } from "react"
-import { ethers } from "ethers";
+import { useContext, useState } from "react";
+import { FileUploader } from "react-drag-drop-files";
 import Endpoints from "../../EndpointWrapper";
-import { KudoDto } from "../../types/KudoDto"
-import { DragDrop } from "../upload-image/Drop";
+import { KudoDto } from "../../types/KudoDto";
+import { AccountContext } from "../wrappers/IdentityWrapper";
 import { DescriptionInput } from "./DescriptionInput";
 import { InputField } from "./InputField";
 import { SubmitButton } from "./SubmitButton";
@@ -11,6 +11,7 @@ type StateData = {
   kudo: KudoDto,
   image: Blob,
 }
+
 const emptyKudoDto: KudoDto = {
   from: "",// todo create form fields to input these
   to: "",// todo create form fields to input these
@@ -20,11 +21,26 @@ const emptyKudoDto: KudoDto = {
   tokenId: "" // not in the original form
 };
 
+const BAD_ADDRESS = 'not-connected';
 export function Form(props: { title: string }): JSX.Element {
-  const callbAck = (data: StateData) => {
-    // todo need to have the new data format
-    Endpoints.postImage(data.image, );
-    Endpoints.saveKudo(data);
+
+  const fileTypes = ["JPG", "PNG", "SVG"];
+  const [file, setFile] = useState(null as unknown as Blob);
+  const handleFileChange = (file: Blob) => {
+    setFile(file);
+  };
+
+  const [address, setAddress] = useState(BAD_ADDRESS);
+  const context = useContext(AccountContext);
+  try {
+    context.getAddress().then(v => setAddress(v));
+  } catch (error) {
+    console.log('not able to retrieve address yet')
+  }
+
+  const submitCallback = (data: StateData) => {
+    Endpoints.postImage(file, address);
+    // Endpoints.saveKudo(data);
   }
 
   const [dto, setDto] = useState({} as StateData);
@@ -36,12 +52,13 @@ export function Form(props: { title: string }): JSX.Element {
         <InputField placeholder="to" />
         <InputField placeholder="name" />
         <DescriptionInput callback={(e: any) => console.log(e)} />
-        <DragDrop callback={(e: any) => console.log(e)} />
+        <FileUploader handleChange={handleFileChange}
+          hoverTitle='drop your image here'
+          name="file" types={fileTypes} />
         <small id="help" className="block mt-1 text-xs text-gray-600">for now it'll live on the Ropsten network</small>
-        <SubmitButton />
+        {address === BAD_ADDRESS && <p>First connect with your wallet!</p>}
+        <SubmitButton disabled={address === BAD_ADDRESS} callback={submitCallback} />
       </form>
     </div >
   </>
 }
-
-

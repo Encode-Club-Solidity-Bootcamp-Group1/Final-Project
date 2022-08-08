@@ -4,13 +4,13 @@ import { fakeData } from '../../components/kudos-list/fakeData';
 import { Paper } from '@mui/material';
 
 export function ListsPanel(props: {}): JSX.Element {
-  // todo /kudos/received/{address}
-  // todo /kudos/sent/{address}
   return <Paper style={{ height: 800, width: 1000 }}>
-    <KudosList title='Received' data={fakeData} />
-    <br />
-    <br />
-    <KudosList title='Sent' data={fakeData} />
-    <br />
+    <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
+      <KudosList title='Received' data={fakeData} />
+      <br />
+      <br />
+      <KudosList title='Sent' data={fakeData} />
+      <br />
+    </div>
   </Paper>;
 }
