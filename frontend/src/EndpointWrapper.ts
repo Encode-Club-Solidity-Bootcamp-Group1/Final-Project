@@ -19,7 +19,7 @@ export default class Endpoints{
     return await runGetQuery(url);
   }
 
-  static postImage():any {
+  static postImage(image: Blob, address:string):any {
 
   }
 

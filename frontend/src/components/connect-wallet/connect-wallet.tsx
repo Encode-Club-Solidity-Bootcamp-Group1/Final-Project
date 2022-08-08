@@ -1,13 +1,16 @@
 import { Ropsten, useEthers } from '@usedapp/core';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
+import { JsonRpcSigner } from '@ethersproject/providers';
 import React from 'react';
+import { AccountChangeContext } from '../wrappers/IdentityWrapper';
 
-export default function ConnectWallet() {
+export default function ConnectWallet(props: {}): JSX.Element {
   const [switchPending, setSwitchPending] = useState(false);
   const [handledSignRequest, setHandledSignRequest] = useState<'not-checked' | 'pending' | 'checked'>('not-checked');
   const { account, deactivate, activateBrowserWallet, chainId, active, switchNetwork } = useEthers();
 
+  const context = useContext(AccountChangeContext);
   const checkSignRequest = useCallback(async () => {
     // TODO: we can keep sign request approval in local storage for 12 hours. after 12 hours request again.
     if (handledSignRequest === 'checked' || handledSignRequest === 'pending') return;
@@ -50,7 +53,8 @@ export default function ConnectWallet() {
 
       await window.ethereum.send('eth_requestAccounts');
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+      const signer: JsonRpcSigner = provider.getSigner();
+      context.setLogin(signer);
       // todo update message displayed in metamask
       const message = 'Hey guys, we need to update this part to tell something to the user. :)';
       const signature = await signer.signMessage(message);

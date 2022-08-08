@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { ethers } from "ethers";
 import Endpoints from "../../EndpointWrapper";
 import { KudoDto } from "../../types/KudoDto"
 import { DragDrop } from "../upload-image/Drop";
@@ -6,6 +7,10 @@ import { DescriptionInput } from "./DescriptionInput";
 import { InputField } from "./InputField";
 import { SubmitButton } from "./SubmitButton";
 
+type StateData = {
+  kudo: KudoDto,
+  image: Blob,
+}
 const emptyKudoDto: KudoDto = {
   from: "",// todo create form fields to input these
   to: "",// todo create form fields to input these
@@ -16,13 +21,13 @@ const emptyKudoDto: KudoDto = {
 };
 
 export function Form(props: { title: string }): JSX.Element {
-  const callbAck = (data: KudoDto) => {
+  const callbAck = (data: StateData) => {
     // todo need to have the new data format
-    Endpoints.postImage(data.imageUrl);
+    Endpoints.postImage(data.image, );
     Endpoints.saveKudo(data);
   }
 
-  const [dto, setDto] = useState({} as KudoDto);
+  const [dto, setDto] = useState({} as StateData);
   return <>
     <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
       <h6 className="font-medium leading-tight text-base mt-0 mb-2 text-blue-600">{props.title}</h6>
