@@ -1,6 +1,7 @@
 import { Ropsten, useEthers } from '@usedapp/core';
 import { useCallback, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
+import React from 'react';
 
 export default function ConnectWallet() {
   const [switchPending, setSwitchPending] = useState(false);
@@ -50,6 +51,7 @@ export default function ConnectWallet() {
       await window.ethereum.send('eth_requestAccounts');
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
+      // todo update message displayed in metamask
       const message = 'Hey guys, we need to update this part to tell something to the user. :)';
       const signature = await signer.signMessage(message);
       const address = await signer.getAddress();
