@@ -12,7 +12,6 @@ export default function ConnectWallet(props: {}): JSX.Element {
 
   const context = useContext(AccountChangeContext);
   const checkSignRequest = useCallback(async () => {
-    // TODO: we can keep sign request approval in local storage for 12 hours. after 12 hours request again.
     if (handledSignRequest === 'checked' || handledSignRequest === 'pending') return;
     setHandledSignRequest('pending');
     const result = await signMessage();
@@ -22,6 +21,7 @@ export default function ConnectWallet(props: {}): JSX.Element {
     } else {
       setHandledSignRequest('checked');
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deactivate, handledSignRequest]);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export default function ConnectWallet(props: {}): JSX.Element {
       const signer: JsonRpcSigner = provider.getSigner();
       context.setLogin(signer);
       // todo update message displayed in metamask
-      const message = 'Hey guys, we need to update this part to tell something to the user. :)';
+      const message = 'You connected to the Kudos app! :)';
       const signature = await signer.signMessage(message);
       const address = await signer.getAddress();
 

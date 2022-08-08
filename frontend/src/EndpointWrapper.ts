@@ -1,4 +1,5 @@
-import axios, {AxiosResponse, AxiosError} from 'axios';
+import axios, {AxiosResponse, AxiosError, AxiosRequestConfig} from 'axios';
+import multer from 'multer';
 
 import { KudoDto } from "./types/KudoDto";
 
@@ -20,9 +21,16 @@ export default class Endpoints{
 
   static postImage(image: Blob, address:string):any {
     console.debug('image', image.size, 'address:', address);
+    let formData = new FormData();
+    formData.append("image",image);
+    const config: AxiosRequestConfig = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    };
     const url: string = `${this._basicUrl}/upload`;
     try {
-      axios.post(url, image).then((res: AxiosResponse) => {
+      axios.post(url,formData, config).then((res: AxiosResponse) => {
         console.log('response:', res);
       })
     } catch (error) {
