@@ -52,7 +52,24 @@ export function Form(props: { title: string }): JSX.Element {
         <InputField placeholder="to" />
         <InputField placeholder="name" />
         <DescriptionInput callback={(e: any) => console.log(e)} />
-        <FileUploader handleChange={handleFileChange}
+        <FileUploader
+          className="
+      form-control
+        block
+        w-full
+        px-3
+        py-1.5
+        text-base
+        font-normal
+        text-gray-700
+        bg-white bg-clip-padding
+        border border-solid border-gray-300
+        rounded
+        transition
+        ease-in-out
+        m-0
+        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+          handleChange={handleFileChange}
           hoverTitle='drop your image here'
           name="file" types={fileTypes} />
         <small id="help" className="block mt-1 text-xs text-gray-600">for now it'll live on the Ropsten network</small>

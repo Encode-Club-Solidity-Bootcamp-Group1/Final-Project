@@ -3,11 +3,10 @@ import React from "react";
 
 
 export function SubmitButton(props: { callback?: Function, disabled: boolean }): JSX.Element {
-
-  return <button type="submit" className="
+  return <button type="submit" className={`
       px-6
-      py-2.5
       bg-blue-600
+      py-2.5
       text-white
       font-medium
       text-xs
@@ -20,7 +19,7 @@ export function SubmitButton(props: { callback?: Function, disabled: boolean }):
       active:bg-blue-800 active:shadow-lg
       transition
       duration-150
-      ease-in-out"
+      ease-in-out`}
     onClick={e => {
       console.log('submitting', e);
       props.callback!();
