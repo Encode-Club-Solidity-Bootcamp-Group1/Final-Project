@@ -6,14 +6,17 @@ import {
   Post,
   Body,
   Param,
+  Injectable,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { InjectModel } from '@nestjs/mongoose';
 import { Express } from 'express';
 import { AppService } from './app.service';
 import { NFTStorage, File } from 'nft.storage';
-
+import { Kudo, KudoDocument } from './schemas/kudo.schema';
 import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
+import { Model } from 'mongoose';
 
 const db = new JsonDB(new Config('myDataBase', true, false, '/'));
 const NFT_STORAGE_KEY =
@@ -28,9 +31,13 @@ export class KudoDto {
   tokenId: string;
 }
 
+@Injectable()
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    @InjectModel(Kudo.name) private readonly kudoModel: Model<KudoDocument>,
+  ) {}
 
   @Get()
   getHello(): string {
@@ -49,32 +56,25 @@ export class AppController {
 
   @Post('save-kudo')
   async saveKudo(@Body() kudoDto: KudoDto) {
-    db.push(`/kudos/${kudoDto.tokenId}`, kudoDto);
+    await this.kudoModel.create(kudoDto);
     return { message: 'data saved' };
   }
 
   @Get('/kudos/received/:address')
   async getReceivedKudos(@Param() params) {
-    const isDataExists = await db.exists('/kudos');
-    if (!isDataExists) {
+    const received = await this.kudoModel.find({ to: params.address });
+    if (received.length === 0) {
       return { error: 'db is empty' };
     }
-    const kudos = await db.getData('/kudos');
-    const kudosArray = Object.keys(kudos).map((key) => kudos[key]);
-    const received = kudosArray.filter((kudo) => kudo.to === params.address);
     return received;
   }
 
   @Get('/kudos/sent/:address')
   async getSentKudos(@Param() params) {
-    const isDataExists = await db.exists('/kudos');
-    if (!isDataExists) {
+    const sent = await this.kudoModel.find({ from: params.address });
+    if (sent.length === 0) {
       return { error: 'db is empty' };
     }
-    const kudos = await db.getData('/kudos');
-    const kudosArray = Object.keys(kudos).map((key) => kudos[key]);
-
-    const sent = kudosArray.filter((kudo) => kudo.from === params.address);
     return sent;
   }
 }
