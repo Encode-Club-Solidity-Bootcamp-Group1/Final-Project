@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
-import Endpoints from "../../EndpointWrapper";
+import ContractFacade from "../../ContractFacade";
+import EndpointFacade from "../../EndpointFacade";
 import { KudoDto } from "../../types/KudoDto";
 import { AccountContext } from "../wrappers/IdentityWrapper";
 import { DescriptionInput } from "./DescriptionInput";
@@ -9,7 +10,7 @@ import { SubmitButton } from "./SubmitButton";
 
 type StateData = {
   kudo: KudoDto,
-  image: Blob,
+  imageUrl: Blob,
 }
 
 const BAD_ADDRESS = 'not-connected';
@@ -30,8 +31,16 @@ export function Form(props: { title: string }): JSX.Element {
   }
 
   const submitCallback = (data: StateData) => {
-    Endpoints.postImage(file, address);
-    // Endpoints.saveKudo(data);
+    EndpointFacade.postImage(file, address).then((url: string) => {
+      console.log('successful file upload');
+      data.kudo.imageUrl = url;
+      ContractFacade.deployNft(data.kudo).then((response: any) => {
+
+        EndpointFacade.saveKudo(data.kudo).then((repsonse: any) => {
+          console.log('succesful saving of the kudo as an NFT');
+        });
+      })
+    })
   }
 
   const [dto, setDto] = useState({} as StateData);

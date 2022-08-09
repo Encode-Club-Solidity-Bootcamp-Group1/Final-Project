@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import { useContext } from 'react';
 import { KudosList } from '../../components/kudos-list/KudosList';
 import { AccountContext } from '../../components/wrappers/IdentityWrapper';
-import Endpoints from '../../EndpointWrapper';
+import Endpoints from '../../EndpointFacade.ts';
 import { KudoDto } from '../../types/KudoDto';
 
 export function ListsPanel(props: {}): JSX.Element {
