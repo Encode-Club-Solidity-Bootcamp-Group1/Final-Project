@@ -35,7 +35,6 @@ export function Form(props: { title: string }): JSX.Element {
       console.log('successful file upload');
       data.kudo.imageUrl = url;
       BlockchainService.deployNft(data.kudo).then((response: any) => {
-
         EndpointService.saveKudo(data.kudo).then((repsonse: any) => {
           console.log('succesful saving of the kudo as an NFT');
         });
@@ -44,6 +43,7 @@ export function Form(props: { title: string }): JSX.Element {
   }
 
   const [dto, setDto] = useState({} as StateData);
+  // todo make the form really parse data
   return <>
     <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
       <h6 className="font-medium leading-tight text-base mt-0 mb-2 text-blue-600">{props.title}</h6>
