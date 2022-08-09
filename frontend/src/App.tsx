@@ -1,17 +1,15 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { NewWrapper } from './components/wrappers/IdentityWrapper';
+import { IdentityWrapper } from './components/wrappers/IdentityWrapper';
 import HomePage from './pages/home-page';
 
-function App() {
+export default function App() {
   return (
-    <NewWrapper>
+    <IdentityWrapper>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
         </Routes>
       </BrowserRouter>
-    </NewWrapper>
+    </IdentityWrapper>
   );
 }
-
-export default App;
