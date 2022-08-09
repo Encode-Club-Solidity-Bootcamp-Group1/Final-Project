@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
-import ContractFacade from "../../ContractFacade";
-import EndpointFacade from "../../EndpointFacade";
+import BlockchainService from "../../services/Blockchain.service";
+import EndpointService from "../../services/Endpoint.service";
 import { KudoDto } from "../../types/KudoDto";
 import { AccountContext } from "../wrappers/IdentityWrapper";
 import { DescriptionInput } from "./DescriptionInput";
@@ -31,12 +31,12 @@ export function Form(props: { title: string }): JSX.Element {
   }
 
   const submitCallback = (data: StateData) => {
-    EndpointFacade.postImage(file, address).then((url: string) => {
+    EndpointService.postImage(file, address).then((url: string) => {
       console.log('successful file upload');
       data.kudo.imageUrl = url;
-      ContractFacade.deployNft(data.kudo).then((response: any) => {
+      BlockchainService.deployNft(data.kudo).then((response: any) => {
 
-        EndpointFacade.saveKudo(data.kudo).then((repsonse: any) => {
+        EndpointService.saveKudo(data.kudo).then((repsonse: any) => {
           console.log('succesful saving of the kudo as an NFT');
         });
       })

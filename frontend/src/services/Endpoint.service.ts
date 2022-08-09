@@ -1,8 +1,8 @@
 import axios, {AxiosResponse, AxiosError, AxiosRequestConfig} from 'axios';
-import { KudoDto } from "./types/KudoDto";
+import { KudoDto } from '../types/KudoDto';
 
 
-export default class EndpointFacade{
+export default class EndpointService{
   private static _basicUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:9000' : 'herokuUrl';
     // todo make the heroku Url
 
