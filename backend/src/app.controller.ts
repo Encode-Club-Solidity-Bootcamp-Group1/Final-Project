@@ -14,11 +14,8 @@ import { Express } from 'express';
 import { AppService } from './app.service';
 import { NFTStorage, File } from 'nft.storage';
 import { Kudo, KudoDocument } from './schemas/kudo.schema';
-import { JsonDB } from 'node-json-db';
-import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
 import { Model } from 'mongoose';
 
-const db = new JsonDB(new Config('myDataBase', true, false, '/'));
 const NFT_STORAGE_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDY2MmJBMTI3NzgyQ2YwMzY5RWJlNjBjNWQ3RTY3NTdhMjMzMzkzMWIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1Nzk3MzY5MDkxNiwibmFtZSI6ImJvb3RjYW1wIn0.jc9Sygkjdnk8WnuQqmumVzUkA8emzQ9Vt7bltkkNSbw';
 
