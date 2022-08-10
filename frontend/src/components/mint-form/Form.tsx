@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
-import Endpoints from "../../EndpointWrapper";
+import BlockchainService from "../../services/Blockchain.service";
+import EndpointService from "../../services/Endpoint.service";
 import { KudoDto } from "../../types/KudoDto";
 import { AccountContext } from "../wrappers/IdentityWrapper";
 import { DescriptionInput } from "./DescriptionInput";
@@ -29,8 +30,15 @@ export function Form(props: { title: string; walletAdd: string }): JSX.Element {
   }
 
   const submitCallback = (data: StateData) => {
-    Endpoints.postImage(file, address);
-    // Endpoints.saveKudo(data);
+    EndpointService.postImage(file, address).then((url: string) => {
+      console.log("successful file upload");
+      data.kudo.imageUrl = url;
+      BlockchainService.deployNft(data.kudo).then((response: any) => {
+        EndpointService.saveKudo(data.kudo).then((response: any) => {
+          console.log("succesful saving of the kudo as an NFT");
+        });
+      });
+    });
   };
 
   const [dto, setDto] = useState({} as StateData);
