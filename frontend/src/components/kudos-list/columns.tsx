@@ -1,29 +1,29 @@
-import { GridColDef } from '@mui/x-data-grid/models/colDef';
+import { GridColDef } from "@mui/x-data-grid/models/colDef";
 
 export const COLUMNS: GridColDef[] = [
   {
-    field: 'from',
-    headerName: 'From'
+    field: "from",
+    headerName: "From",
   },
 
   {
-    field: 'to',
-    headerName: 'To'
+    field: "to",
+    headerName: "To",
   },
   {
-    field: 'name',
-    headerName: 'Name'
+    field: "name",
+    headerName: "Name",
   },
   {
-    field: 'description',
-    headerName: 'Description'
+    field: "description",
+    headerName: "Description",
   },
   {
-    field: 'imageUrl',
-    headerName: 'Link'
+    field: "imageUrl",
+    headerName: "Link",
   },
   {
-    field: 'tokenId',
-    headerName: 'Token ID'
+    field: "tokenId",
+    headerName: "Tx ID",
   },
 ];
