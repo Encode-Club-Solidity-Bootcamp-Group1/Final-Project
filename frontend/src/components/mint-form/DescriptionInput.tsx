@@ -5,7 +5,7 @@ export function DescriptionInput(props: { callback: Function; }): JSX.Element {
     <label htmlFor="descriptionTextArea" className="form-label inline-block mb-2 text-gray-700">Description</label>
     <textarea
       id="descriptionTextArea"
-      name="descriptionInput"
+      name="description"
       className="
       form-control
         block

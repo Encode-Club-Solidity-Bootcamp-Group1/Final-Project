@@ -2,8 +2,10 @@ import React from "react";
 
 export function InputField(props: {
   placeholder: string;
-  onClick?: Function;
-  walletAdd?: string;
+  value?: string;
+  onChange: any
+  title?: string;
+  disabled?: boolean;
 }): JSX.Element {
   return (
     <div className="form-group mb-6">
@@ -11,7 +13,7 @@ export function InputField(props: {
         htmlFor={`${props.placeholder}-input`}
         className="form-label inline-block mb-2 text-gray-700"
       >
-        {upperCaseFirstLetter(props.placeholder)}
+        {props.title ?? upperCaseFirstLetter(props.placeholder)}
       </label>
       <input
         type="text"
@@ -29,11 +31,15 @@ export function InputField(props: {
         transition
         ease-in-out
         m-0
+        disabled:bg-grey-600
         focus:text-{gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
         id={`${props.placeholder}-input`}
         aria-describedby={props.placeholder}
         placeholder={props.placeholder}
-        value={props.walletAdd}
+        name={props.placeholder}
+        value={props.value}
+        onChange={props.onChange}
+        disabled={props.disabled ?? false}
       />
     </div>
   );

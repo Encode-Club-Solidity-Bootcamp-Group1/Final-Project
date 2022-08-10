@@ -1,8 +1,6 @@
 import { Ropsten, useEthers } from "@usedapp/core";
-import { useCallback, useContext, useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { JsonRpcSigner } from "@ethersproject/providers";
-import React from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { AccountChangeContext } from "../wrappers/IdentityWrapper";
 
 export default function ConnectWallet(props: {
@@ -74,7 +72,7 @@ export default function ConnectWallet(props: {
 
       await window.ethereum.send("eth_requestAccounts");
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer: JsonRpcSigner = provider.getSigner();
+      const signer: ethers.Signer = provider.getSigner();
       context.setLogin(signer);
       const message = "Please, sign this message for log into Kudos dApp";
       const signature = await signer.signMessage(message);
