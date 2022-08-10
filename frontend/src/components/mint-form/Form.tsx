@@ -35,7 +35,7 @@ export function Form(props: { title: string; walletAdd: string }): JSX.Element {
       data.kudo.imageUrl = url;
       BlockchainService.deployNft(data.kudo).then((response: any) => {
         EndpointService.saveKudo(data.kudo).then((response: any) => {
-          console.log("succesful saving of the kudo as an NFT");
+          console.log("successful saving of the kudo as an NFT");
         });
       });
     });
@@ -80,7 +80,7 @@ export function Form(props: { title: string; walletAdd: string }): JSX.Element {
           </small>
           {address === BAD_ADDRESS && <p>First connect with your wallet!</p>}
           <SubmitButton
-            disabled={address === BAD_ADDRESS}
+            disabled={address === BAD_ADDRESS || !file}
             callback={submitCallback}
           />
         </form>
