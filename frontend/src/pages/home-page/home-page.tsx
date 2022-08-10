@@ -1,8 +1,10 @@
-import React from 'react';
-import ConnectWallet from '../../components/connect-wallet';
-import { Form } from '../../components/mint-form/Form';
-import MainPage from '../main-page';
-import { ListsPanel } from './ListsPanel';
+import React from "react";
+import ConnectWallet from "../../components/connect-wallet";
+import { Form } from "../../components/mint-form/Form";
+import MainPage from "../main-page";
+import { ListsPanel } from "./ListsPanel";
+import "./styles/home-page.css";
+
 export default function HomePage() {
   return (
     <MainPage>
@@ -11,13 +13,14 @@ export default function HomePage() {
           <div className="absolute top-[10%] right-[5%]">
             <ConnectWallet />
           </div>
-          <div className='absolute top-[15%] left-[5%]'>
-            <Form title='Mint NFT' />
+          <div className="absolute top-[15%] left-[5%] flex">
+            <div className="marginForm">
+              <Form title="Mint NFT" />
+            </div>
+            <ListsPanel />
           </div>
-          <ListsPanel />
         </div>
       </div>
     </MainPage>
   );
 }
-
