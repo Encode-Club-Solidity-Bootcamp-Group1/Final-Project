@@ -14,6 +14,7 @@ export function ListsPanel(props: {}): JSX.Element {
     acccount.getAddress().then((address) => {
       EndpointService.getReceived(address)
         .then((data: KudoDto[]) => {
+          console.log('received kudos:', data);
           receivedKudos = data;
         })
         .catch((e: AxiosError) =>
@@ -22,6 +23,7 @@ export function ListsPanel(props: {}): JSX.Element {
       EndpointService.getSent(address)
         .then((data: KudoDto[]) => {
           sentKudos = data;
+          console.log('sent kudos:', data);
         })
         .catch((e: AxiosError) =>
           console.error("couldn't receive the data", e)

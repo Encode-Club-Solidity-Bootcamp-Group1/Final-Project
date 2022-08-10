@@ -8,18 +8,26 @@ export default class EndpointService{
 
   static async getSent(address:string):Promise<KudoDto[]> {
     const url: string = `${this._basicUrl}/kudos/sent/${address}`;
-    return await runGetQuery(url);
-
+    const result = await runGetQuery(url);
+    console.log('result, ', result);
+    return result;
   } 
 
   static async getReceived(address:string):Promise<KudoDto[]>{
     const url: string = `${this._basicUrl}/kudos/received/${address}`;
-    return await runGetQuery(url);
+    const result = await runGetQuery(url);
+    console.log('result, ', result);
+    return result;
   }
 
   static async postImage(image: Blob, address:string): Promise<string>{
     console.debug('image', image.size, 'address:', address);
     let formData = new FormData();
+
+
+
+
+
     formData.append("image",image);
     const config: AxiosRequestConfig = {
       headers: {
@@ -28,6 +36,7 @@ export default class EndpointService{
     };
     const url: string = `${this._basicUrl}/upload`;
     let answerImageUrl: string = '';
+    console.log('url:', url, 'form data:', formData, formData.entries(), ' config', config);
     try {
       axios.post(url,formData, config).then((res: AxiosResponse) => {
         console.log('response:', res);
@@ -61,6 +70,7 @@ async function runGetQuery(url: string):Promise<KudoDto[]>{
   let final:KudoDto[] = [];
   // todo sort this out
   axios.get(url).then((res: AxiosResponse) => {
+    // console.log('axios response from get query', res);
     final = res.data;
   }).catch((e: AxiosError) => {
     console.error(e);

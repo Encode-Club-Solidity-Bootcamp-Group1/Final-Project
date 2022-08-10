@@ -5,12 +5,12 @@ import BlockchainService from "../../services/Blockchain.service";
 import EndpointService from "../../services/Endpoint.service";
 import { AccountContext } from "../wrappers/IdentityWrapper";
 import { DescriptionInput } from "./DescriptionInput";
-import { BAD_ADDRESS, DEFAULT_KUDO, fileTypes } from "./formConstants";
+import { BAD_ADDRESS, getDefaultKudoWithWalletAddress, fileTypes } from "./formConstants";
 import { InputField } from "./InputField";
 import { SubmitButton } from "./SubmitButton";
 
 export function Form(props: { title: string; walletAdd: string }): JSX.Element {
-  const [dto, setDto] = useState(DEFAULT_KUDO);
+  const [dto, setDto] = useState(getDefaultKudoWithWalletAddress(props.walletAdd));
   const [ownAddress, setOwnAddress] = useState(BAD_ADDRESS);
   const [file, setFile] = useState(null as unknown as Blob);
 

@@ -14,19 +14,11 @@ import { NFTStorage, File } from 'nft.storage';
 
 import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
+import { KudoDto } from './KudoDto';
 
 const db = new JsonDB(new Config('myDataBase', true, false, '/'));
 const NFT_STORAGE_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDY2MmJBMTI3NzgyQ2YwMzY5RWJlNjBjNWQ3RTY3NTdhMjMzMzkzMWIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1Nzk3MzY5MDkxNiwibmFtZSI6ImJvb3RjYW1wIn0.jc9Sygkjdnk8WnuQqmumVzUkA8emzQ9Vt7bltkkNSbw';
-
-export class KudoDto {
-  from: string;
-  to: string;
-  name: string;
-  description: string;
-  imageUrl: string;
-  tokenId: string;
-}
 
 @Controller()
 export class AppController {
@@ -49,6 +41,7 @@ export class AppController {
 
   @Post('save-kudo')
   async saveKudo(@Body() kudoDto: KudoDto) {
+    console.log('pushing a new kudo to db:', kudoDto);
     db.push(`/kudos/${kudoDto.tokenId}`, kudoDto);
     return { message: 'data saved' };
   }
