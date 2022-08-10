@@ -40,8 +40,8 @@ export class AppController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<string> {
-    const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
-    const cid = await nftstorage.storeBlob(
+    const nftStorage = new NFTStorage({ token: NFT_STORAGE_KEY });
+    const cid = await nftStorage.storeBlob(
       new File([file.buffer], file.originalname),
     );
     return `https://ipfs.io/ipfs/${cid}`;
