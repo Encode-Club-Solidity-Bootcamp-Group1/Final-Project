@@ -1,6 +1,7 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { KudoDto } from "../../types/KudoDto";
 import { COLUMNS } from "./columns";
+
 export function KudosList(props: {
   title: string;
   data: KudoDto[];
