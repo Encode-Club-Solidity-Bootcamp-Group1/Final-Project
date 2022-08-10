@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Box } from '@mui/system';
 import ConnectWallet from "../../components/connect-wallet";
 import { Form } from "../../components/mint-form/Form";
 import MainPage from "../main-page";
@@ -11,18 +12,15 @@ export default function HomePage() {
   return (
     <MainPage>
       <div className="grid place-items-center h-screen relative">
-        <div>
-          <div className="absolute top-[10%] right-[5%]">
-            <ConnectWallet setWalletAdd={setWalletAdd} />
-          </div>
-          <div className="absolute top-[15%] left-[5%] flex">
-            <div className="marginForm">
-              <Form title="Mint NFT" walletAdd={walletAdd} />
-            </div>
-            <ListsPanel />
-          </div>
-        </div>
+        <nav >
+          <ConnectWallet setWalletAdd={setWalletAdd}/>
+        </nav >
+        <Box sx={{ flexDirection: 'row' }}>
+          <Form title='Mint NFT' walletAdd={walletAdd}/>
+          <ListsPanel />
+        </Box>
       </div>
     </MainPage>
   );
 }
+

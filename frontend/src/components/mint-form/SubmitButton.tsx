@@ -1,7 +1,5 @@
 import React from "react";
 
-
-
 export function SubmitButton(props: { callback?: Function, disabled: boolean }): JSX.Element {
   return <button type="submit" className={`
       px-6

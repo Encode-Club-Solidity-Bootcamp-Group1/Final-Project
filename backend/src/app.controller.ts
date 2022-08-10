@@ -39,7 +39,7 @@ export class AppController {
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+  async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<string> {
     const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
     const cid = await nftstorage.storeBlob(
       new File([file.buffer], file.originalname),

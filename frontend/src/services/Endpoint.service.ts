@@ -1,9 +1,8 @@
-import axios, {AxiosResponse, AxiosError} from 'axios';
+import axios, {AxiosResponse, AxiosError, AxiosRequestConfig} from 'axios';
+import { KudoDto } from '../types/KudoDto';
 
-import { KudoDto } from "./types/KudoDto";
 
-
-export default class Endpoints{
+export default class EndpointService{
   private static _basicUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:9000' : 'herokuUrl';
     // todo make the heroku Url
 
@@ -18,16 +17,26 @@ export default class Endpoints{
     return await runGetQuery(url);
   }
 
-  static postImage(image: Blob, address:string):any {
+  static async postImage(image: Blob, address:string): Promise<string>{
     console.debug('image', image.size, 'address:', address);
+    let formData = new FormData();
+    formData.append("image",image);
+    const config: AxiosRequestConfig = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    };
     const url: string = `${this._basicUrl}/upload`;
+    let answerImageUrl: string = '';
     try {
-      axios.post(url, image).then((res: AxiosResponse) => {
+      axios.post(url,formData, config).then((res: AxiosResponse) => {
         console.log('response:', res);
+        answerImageUrl = res.data;
       })
     } catch (error) {
       console.error('could not send the image', error); 
     }
+    return answerImageUrl;
 
   }
 

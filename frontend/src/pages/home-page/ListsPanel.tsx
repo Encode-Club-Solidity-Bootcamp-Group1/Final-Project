@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import { useContext } from 'react';
 import { KudosList } from '../../components/kudos-list/KudosList';
 import { AccountContext } from '../../components/wrappers/IdentityWrapper';
-import Endpoints from '../../EndpointWrapper';
+import EndpointService from '../../services/Endpoint.service';
 import { KudoDto } from '../../types/KudoDto';
 
 export function ListsPanel(props: {}): JSX.Element {
@@ -12,10 +12,10 @@ export function ListsPanel(props: {}): JSX.Element {
   const acccount = useContext(AccountContext);
   try {
     acccount.getAddress().then(address => {
-      Endpoints.getReceived(address).then((data: KudoDto[]) => {
+      EndpointService.getReceived(address).then((data: KudoDto[]) => {
         receivedKudos = data;
       }).catch((e: AxiosError) => console.error("couldn't receive the data", e));
-      Endpoints.getSent(address).then((data: KudoDto[]) => {
+      EndpointService.getSent(address).then((data: KudoDto[]) => {
         sentKudos = data;
       }).catch((e: AxiosError) => console.error("couldn't receive the data", e));
     })
