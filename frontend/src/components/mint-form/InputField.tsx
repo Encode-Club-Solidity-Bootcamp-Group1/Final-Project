@@ -1,11 +1,21 @@
 import React from "react";
 
-
-
-export function InputField(props: { placeholder: string; onClick?: Function; }): JSX.Element {
-  return <div className="form-group mb-6">
-    <label htmlFor={`${props.placeholder}-input`} className="form-label inline-block mb-2 text-gray-700">{upperCaseFirstLetter(props.placeholder)}</label>
-    <input type="text" className="form-control
+export function InputField(props: {
+  placeholder: string;
+  onClick?: Function;
+  walletAdd?: string;
+}): JSX.Element {
+  return (
+    <div className="form-group mb-6">
+      <label
+        htmlFor={`${props.placeholder}-input`}
+        className="form-label inline-block mb-2 text-gray-700"
+      >
+        {upperCaseFirstLetter(props.placeholder)}
+      </label>
+      <input
+        type="text"
+        className="form-control
         block
         w-full
         px-3
@@ -19,12 +29,16 @@ export function InputField(props: { placeholder: string; onClick?: Function; }):
         transition
         ease-in-out
         m-0
-        focus:text-{gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" id={`${props.placeholder}-input`}
-      aria-describedby={props.placeholder} placeholder={props.placeholder} />
-  </div>
+        focus:text-{gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+        id={`${props.placeholder}-input`}
+        aria-describedby={props.placeholder}
+        placeholder={props.placeholder}
+        value={props.walletAdd}
+      />
+    </div>
+  );
 }
 
 function upperCaseFirstLetter(s: string): string {
   return s[0].toUpperCase() + s.substring(1);
-
 }
