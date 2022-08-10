@@ -40,15 +40,19 @@ export default class EndpointService{
 
   }
 
-  static saveKudo(obj: KudoDto):any {
+  static async saveKudo(obj: KudoDto):Promise<string> {
     const url: string = `${this._basicUrl}/save-kudo`;
+    let response = '';
     try {
-      axios.post(url, obj).then((res: AxiosResponse) => {
+      await axios.post(url, obj).then((res: AxiosResponse) => {
         console.log('saved Kudos!:', res);
-      })
+        response = res.statusText;
+      });
     } catch (error) {
       console.error('could not send the image', error); 
+      response = error as string;
     }
+    return response;
   }
 
 }

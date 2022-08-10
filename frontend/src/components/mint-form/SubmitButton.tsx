@@ -19,6 +19,7 @@ export function SubmitButton(props: { callback?: Function, disabled: boolean }):
       duration-150
       ease-in-out`}
     onClick={e => {
+      e.preventDefault();
       console.log('submitting', e);
       props.callback!();
     }}

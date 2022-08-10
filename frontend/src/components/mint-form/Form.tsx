@@ -1,47 +1,52 @@
+import { ethers } from "ethers";
 import { useContext, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import BlockchainService from "../../services/Blockchain.service";
 import EndpointService from "../../services/Endpoint.service";
-import { KudoDto } from "../../types/KudoDto";
 import { AccountContext } from "../wrappers/IdentityWrapper";
 import { DescriptionInput } from "./DescriptionInput";
+import { BAD_ADDRESS, DEFAULT_KUDO, fileTypes } from "./formConstants";
 import { InputField } from "./InputField";
 import { SubmitButton } from "./SubmitButton";
 
-type StateData = {
-  kudo: KudoDto;
-  image: Blob;
-};
-
-const BAD_ADDRESS = "not-connected";
 export function Form(props: { title: string; walletAdd: string }): JSX.Element {
-  const fileTypes = ["JPG", "PNG", "SVG"];
+  const [dto, setDto] = useState(DEFAULT_KUDO);
+  const [ownAddress, setOwnAddress] = useState(BAD_ADDRESS);
   const [file, setFile] = useState(null as unknown as Blob);
-  const handleFileChange = (file: Blob) => {
-    setFile(file);
-  };
 
-  const [address, setAddress] = useState(BAD_ADDRESS);
+  const handleFileChange = (file: Blob) => setFile(file);
+
+  const signer: ethers.Signer = useContext(AccountContext);
   const context = useContext(AccountContext);
+
   try {
-    context.getAddress().then((v) => setAddress(v));
+    context.getAddress().then((v) => setOwnAddress(v));
   } catch (error) {
     console.log("not able to retrieve address yet");
   }
 
-  const submitCallback = (data: StateData) => {
-    EndpointService.postImage(file, address).then((url: string) => {
+  const handleChange = (e: any) => {
+    const target: any = e.target!;
+    const value = target.value;
+    const name = target.name;
+    setDto({
+      ...dto,
+      [name]: value
+    });
+  }
+
+  const submitCallback = () => {
+    EndpointService.postImage(file, ownAddress).then((url: string) => {
       console.log("successful file upload");
-      data.kudo.imageUrl = url;
-      BlockchainService.deployNft(data.kudo).then((response: any) => {
-        EndpointService.saveKudo(data.kudo).then((response: any) => {
-          console.log("successful saving of the kudo as an NFT");
+      dto.imageUrl = url;
+      BlockchainService.deployNft(dto, signer).then((response: any) => {
+        EndpointService.saveKudo(dto).then((response: string) => {
+          console.log("successful saving of the kudo as an NFT,", response);
         });
       });
     });
   };
 
-  const [dto, setDto] = useState({} as StateData);
   return (
     <>
       <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
@@ -49,10 +54,16 @@ export function Form(props: { title: string; walletAdd: string }): JSX.Element {
           {props.title}
         </h6>
         <form>
-          <InputField placeholder="from" walletAdd={props.walletAdd} />
-          <InputField placeholder="to" />
-          <InputField placeholder="name" />
-          <DescriptionInput callback={(e: any) => console.log(e)} />
+          <InputField
+            placeholder="from"
+            title="From (your address will appear when you connect your wallet)"
+            value={props.walletAdd}
+            onChange={handleChange}
+            disabled
+          />
+          <InputField placeholder="to" value={dto.to} onChange={handleChange} />
+          <InputField placeholder="name" value={dto.name} onChange={handleChange} />
+          <DescriptionInput callback={handleChange} />
           <FileUploader
             className="
       form-control
@@ -78,9 +89,9 @@ export function Form(props: { title: string; walletAdd: string }): JSX.Element {
           <small id="help" className="block mt-1 text-xs text-gray-600">
             for now it'll live on the Ropsten network
           </small>
-          {address === BAD_ADDRESS && <p>First connect with your wallet!</p>}
+          {ownAddress === BAD_ADDRESS && <p>First connect with your wallet!</p>}
           <SubmitButton
-            disabled={address === BAD_ADDRESS || !file}
+            disabled={ownAddress === BAD_ADDRESS || !file}
             callback={submitCallback}
           />
         </form>
