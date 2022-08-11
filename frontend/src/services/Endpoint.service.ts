@@ -5,7 +5,7 @@ export default class EndpointService {
   private static _basicUrl =
     process.env.NODE_ENV === "development"
       ? "http://localhost:9000"
-      : "herokuUrl";
+      : "https://kudos-encode.herokuapp.com/";
   // todo make the heroku Url
 
   static async getSent(address: string): Promise<any[any]> {
