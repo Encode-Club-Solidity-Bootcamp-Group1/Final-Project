@@ -1,35 +1,25 @@
-import { ethers } from "ethers";
-import { useContext, useState } from "react";
-import { FileUploader } from "react-drag-drop-files";
-import BlockchainService from "../../services/Blockchain.service";
-import EndpointService from "../../services/Endpoint.service";
-import { AccountContext } from "../wrappers/IdentityWrapper";
-import { DescriptionInput } from "./DescriptionInput";
-import {
-  BAD_ADDRESS,
-  getDefaultKudoWithWalletAddress,
-  fileTypes,
-} from "./formConstants";
-import { InputField } from "./InputField";
-import { SubmitButton } from "./SubmitButton";
+import { useEthers } from '@usedapp/core';
+import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
+import { FileUploader } from 'react-drag-drop-files';
+import BlockchainService from '../../services/Blockchain.service';
+import EndpointService from '../../services/Endpoint.service';
+import { DescriptionInput } from './DescriptionInput';
+import { getDefaultKudoWithWalletAddress, fileTypes } from './formConstants';
+import { InputField } from './InputField';
+import { SubmitButton } from './SubmitButton';
 
-export function Form(props: { title: string; walletAdd: string }): JSX.Element {
-  const [dto, setDto] = useState(
-    getDefaultKudoWithWalletAddress(props.walletAdd)
-  );
-  const [ownAddress, setOwnAddress] = useState(BAD_ADDRESS);
+export function Form(props: { title: string }): JSX.Element {
+  const [dto, setDto] = useState(getDefaultKudoWithWalletAddress(''));
   const [file, setFile] = useState(null as unknown as Blob);
-
+  const { account } = useEthers();
   const handleFileChange = (file: Blob) => setFile(file);
 
-  const signer: ethers.Signer = useContext(AccountContext);
-  const context = useContext(AccountContext);
-
-  try {
-    context.getAddress().then((v) => setOwnAddress(v));
-  } catch (error) {
-    console.log("not able to retrieve address yet");
-  }
+  useEffect(() => {
+    if (account) {
+      setDto((prevValue) => ({ ...prevValue, walletAddress: account }));
+    }
+  }, [account]);
 
   const handleChange = (e: any) => {
     const target: any = e.target!;
@@ -42,14 +32,16 @@ export function Form(props: { title: string; walletAdd: string }): JSX.Element {
   };
 
   const submitCallback = () => {
-    EndpointService.postImage(file, ownAddress).then((url: string) => {
-      console.log("successful file upload: ", url);
+    EndpointService.postImage(file, account || '').then((url: string) => {
+      console.log('successful file upload: ', url);
       dto.imageUrl = url;
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer: ethers.Signer = provider.getSigner();
       BlockchainService.deployNft(dto, signer).then((response: any) => {
-        console.log("successful deployment: ", response);
+        console.log('successful deployment: ', response);
         dto.tokenId = response.hash;
         EndpointService.saveKudo(dto).then((response: string) => {
-          console.log("successful saving of the kudo as an NFT,", response);
+          console.log('successful saving of the kudo as an NFT,', response);
         });
       });
     });
@@ -58,23 +50,17 @@ export function Form(props: { title: string; walletAdd: string }): JSX.Element {
   return (
     <>
       <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
-        <h6 className="font-medium leading-tight text-base mt-0 mb-2 text-blue-600">
-          {props.title}
-        </h6>
+        <h6 className="font-medium leading-tight text-base mt-0 mb-2 text-blue-600">{props.title}</h6>
         <form>
           <InputField
             placeholder="from"
             title="From (your address will appear when you connect your wallet)"
-            value={props.walletAdd}
+            value={account}
             onChange={handleChange}
             disabled
           />
           <InputField placeholder="to" value={dto.to} onChange={handleChange} />
-          <InputField
-            placeholder="name"
-            value={dto.name}
-            onChange={handleChange}
-          />
+          <InputField placeholder="name" value={dto.name} onChange={handleChange} />
           <DescriptionInput callback={handleChange} />
           <FileUploader
             className="
@@ -101,11 +87,8 @@ export function Form(props: { title: string; walletAdd: string }): JSX.Element {
           <small id="help" className="block mt-1 text-xs text-gray-600">
             for now it'll live on the Ropsten network
           </small>
-          {ownAddress === BAD_ADDRESS && <p>First connect with your wallet!</p>}
-          <SubmitButton
-            disabled={ownAddress === BAD_ADDRESS || !file}
-            callback={submitCallback}
-          />
+          {!account && <p>First connect with your wallet!</p>}
+          <SubmitButton disabled={!account || !file} callback={submitCallback} />
         </form>
       </div>
     </>

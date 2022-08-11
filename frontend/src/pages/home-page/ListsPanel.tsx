@@ -1,44 +1,42 @@
-import { Box, Paper } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
-import { KudosList } from "../../components/kudos-list/KudosList";
-import { AccountContext } from "../../components/wrappers/IdentityWrapper";
-import EndpointService from "../../services/Endpoint.service";
-import { KudoDto } from "../../types/KudoDto";
+import { Box, Paper } from '@mui/material';
+import { useEthers } from '@usedapp/core';
+import { useCallback, useEffect, useState } from 'react';
+import { KudosList } from '../../components/kudos-list/KudosList';
+import EndpointService from '../../services/Endpoint.service';
 
 export function ListsPanel(props: {}): JSX.Element {
   const [receivedKudos, setReceivedKudos] = useState([]);
   const [sentKudos, setSentKudos] = useState([]);
-  const account = useContext(AccountContext);
+  const { account } = useEthers();
 
-  async function getReceivedKudos() {
-    const address = await account.getAddress();
-    const data = await EndpointService.getReceived(address);
+  const getReceivedKudos = useCallback(async () => {
+    const data = await EndpointService.getReceived(account || '');
     // @ts-ignore
     setReceivedKudos(data.data);
-  }
+  }, [account]);
 
-  async function getSentKudos() {
-    const address = await account.getAddress();
-    const data = await EndpointService.getSent(address);
+  const getSentKudos = useCallback(async () => {
+    const data = await EndpointService.getSent(account || '');
     // @ts-ignore
     setSentKudos(data.data);
-  }
+  }, [account]);
 
   useEffect(() => {
-    getReceivedKudos().then((r) => console.log(r));
-    getSentKudos().then((r) => console.log(r));
-  }, [account]);
+    if (account) {
+      getReceivedKudos().then((r) => console.log(r));
+      getSentKudos().then((r) => console.log(r));
+    }
+  }, [account, getReceivedKudos, getSentKudos]);
 
   return (
     <Paper style={{ height: 800, width: 1000 }}>
       <div className="block p-6 rounded-lg shadow-lg bg-white ">
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-around",
-          }}
-        >
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+          }}>
           <KudosList title="Sent" data={sentKudos} />
           <KudosList title="Received" data={receivedKudos} />
         </Box>
