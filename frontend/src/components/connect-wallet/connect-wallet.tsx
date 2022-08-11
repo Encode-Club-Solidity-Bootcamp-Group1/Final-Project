@@ -1,36 +1,22 @@
-import { Ropsten, useEthers } from "@usedapp/core";
-import { ethers } from "ethers";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { AccountChangeContext } from "../wrappers/IdentityWrapper";
+import { Ropsten, useEthers } from '@usedapp/core';
+import { ethers } from 'ethers';
+import { useCallback, useEffect, useState } from 'react';
 
-export default function ConnectWallet(props: {
-  setWalletAdd: Function;
-}): JSX.Element {
+export default function ConnectWallet(): JSX.Element {
   const [switchPending, setSwitchPending] = useState(false);
-  const [handledSignRequest, setHandledSignRequest] = useState<
-    "not-checked" | "pending" | "checked"
-  >("not-checked");
-  const {
-    account,
-    deactivate,
-    activateBrowserWallet,
-    chainId,
-    active,
-    switchNetwork,
-  } = useEthers();
+  const [handledSignRequest, setHandledSignRequest] = useState<'not-checked' | 'pending' | 'checked'>('not-checked');
+  const { account, deactivate, activateBrowserWallet, chainId, active, switchNetwork } = useEthers();
 
-  const context = useContext(AccountChangeContext);
   const checkSignRequest = useCallback(async () => {
     // TODO: we can keep sign request approval in local storage for 12 hours. after 12 hours request again.
-    if (handledSignRequest === "checked" || handledSignRequest === "pending")
-      return;
-    setHandledSignRequest("pending");
+    if (handledSignRequest === 'checked' || handledSignRequest === 'pending') return;
+    setHandledSignRequest('pending');
     const result = await signMessage();
     if (result.error) {
       deactivate();
-      setHandledSignRequest("not-checked");
+      setHandledSignRequest('not-checked');
     } else {
-      setHandledSignRequest("checked");
+      setHandledSignRequest('checked');
     }
   }, [deactivate, handledSignRequest]);
 
@@ -49,15 +35,7 @@ export default function ConnectWallet(props: {
           .finally(() => setSwitchPending(false));
       } else checkSignRequest();
     }
-  }, [
-    chainId,
-    active,
-    switchNetwork,
-    deactivate,
-    switchPending,
-    account,
-    checkSignRequest,
-  ]);
+  }, [chainId, active, switchNetwork, deactivate, switchPending, account, checkSignRequest]);
 
   const handleOnClick = useCallback(() => {
     if (!account) {
@@ -67,17 +45,14 @@ export default function ConnectWallet(props: {
 
   const signMessage = async () => {
     try {
-      if (!window.ethereum)
-        throw new Error("No crypto wallet found. Please install it.");
+      if (!window.ethereum) throw new Error('No crypto wallet found. Please install it.');
 
-      await window.ethereum.send("eth_requestAccounts");
+      await window.ethereum.send('eth_requestAccounts');
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer: ethers.Signer = provider.getSigner();
-      context.setLogin(signer);
-      const message = "Please, sign this message for log into Kudos dApp";
+      const message = 'Please, sign this message for log into Kudos dApp';
       const signature = await signer.signMessage(message);
       const address = await signer.getAddress();
-      props.setWalletAdd(address);
       return {
         message,
         signature,
@@ -97,8 +72,7 @@ export default function ConnectWallet(props: {
     <button
       type="button"
       className="w-[140px] h-[40px] bg-gradient-to-r from-[#b9e5cd] to-[#b7d4f7] text-white shadow-button rounded-lg  whitespace-nowrap flex items-center justify-center hover:scale-105 transition duration-200 ease-out"
-      onClick={handleOnClick}
-    >
+      onClick={handleOnClick}>
       Connect Wallet
     </button>
   );
